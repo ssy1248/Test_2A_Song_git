@@ -1,23 +1,61 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Animator animator; //Ä³¸¯ÅÍ°¡ Á×°Å³ª ÀÌµ¿°ü·Ã ¾Ö´Ï¸ŞÀÌÅÍ
-    public bool isleft = true; //Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâÀ» À§ÇÑ bool°ª
-    public bool isDie = false; //Ä³¸¯ÅÍ°¡ Á×¾ú´ÂÁö Ã¼Å©ÇÏ´Â bool°ª
-    public int characterIndex; //Ä³¸¯ÅÍ Ãß°¡¸¦ À§ÇØ ¹«½¼ Ä³¸¯ÅÍ°¡ ¼±ÅÃµÇ¾ú´ÂÁö Ã¼Å©¸¦ À§ÇÑ º¯¼ö
-    public int stairIndex; //°è´Ü
-    public int money; //ÄÚÀÎ
+    public Animator anim;
+    public AudioSource[] sound;
+    public GameManager gameManager;
+    public DSLManager dslManager;
 
-    private void Awake()
-    {
-        animator = GetComponent<Animator>();
+    public bool isleft = true;
+    public bool isDie = false;
+
+    public int characterIndex;
+    public int stairIndex;
+    public int money;
+
+    void Awake() {
+        anim = gameObject.GetComponent<Animator>();
+        money = dslManager.GetMoney(); //jsonì„ í†µí•˜ì—¬ ë°ì´í„°ì— ë‚¨ì•„ìˆëŠ” ëˆì„ ê°€ì ¸ì˜¨ë‹¤.
     }
 
     public void Climb(bool isChange)
     {
-        
+        if (isChange) isleft = !isleft;
+        gameManager.StairMove(stairIndex, isChange, isleft);
+        if ((++stairIndex).Equals(20)) stairIndex = 0;
+        MoveAnimation();
+        gameManager.gaugeStart = true;
+    }
+
+    public void MoveAnimation()
+    {
+        if (!isleft)
+            transform.rotation = Quaternion.Euler(0, -180, 0);
+        else
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        if (isDie) return;
+        anim.SetBool("Move",true);
+        gameManager.PlaySound(1);
+        Invoke("IdleAnimation", 0.05f);        
+    }
+
+    public void IdleAnimation()
+    {
+        anim.SetBool("Move", false);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Coin")
+        {
+            collision.gameObject.SetActive(false);
+            gameManager.PlaySound(0);
+            money += 2;
+            dslManager.LoadMoney(money);
+        }
     }
 }
