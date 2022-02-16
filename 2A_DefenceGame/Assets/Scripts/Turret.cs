@@ -25,6 +25,10 @@ public class Turret : MonoBehaviour {
 	public ParticleSystem impactEffect;
 	public Light impactLight;
 
+	[Header("UseAnimation")]
+	public bool IsAnimation = false;
+	private Animator anim;
+
 	[Header("Unity Setup Fields")]
 
 	public string enemyTag = "Enemy";
@@ -37,6 +41,7 @@ public class Turret : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		InvokeRepeating("UpdateTarget", 0f, 0.5f);
+		anim = GetComponent<Animator>();
 	}
 	
 	void UpdateTarget ()
@@ -58,44 +63,90 @@ public class Turret : MonoBehaviour {
 		{
 			target = nearestEnemy.transform;
 			targetEnemy = nearestEnemy.GetComponent<Enemy>();
-		} else
+		} 
+		else
 		{
+			if(IsAnimation)
+            {
+				anim.SetBool("IsAttack", false);
+			}
+
 			target = null;
 		}
 
 	}
 
 	// Update is called once per frame
-	void Update () {
-		if (target == null)
-		{
+	void Update () 
+	{
+		if(IsAnimation)
+        {
+			if (target == null)
+			{
+				if (useLaser)
+				{
+					if (lineRenderer.enabled)
+					{
+						lineRenderer.enabled = false;
+						impactEffect.Stop();
+						impactLight.enabled = false;
+					}
+				}
+
+				return;
+			}
+
+			LockOnTarget();
+			anim.SetBool("IsAttack" ,true);
+
 			if (useLaser)
 			{
-				if (lineRenderer.enabled)
-				{
-					lineRenderer.enabled = false;
-					impactEffect.Stop();
-					impactLight.enabled = false;
-				}
+				Laser();
 			}
-
-			return;
-		}
-
-		LockOnTarget();
-
-		if (useLaser)
-		{
-			Laser();
-		} else
-		{
-			if (fireCountdown <= 0f)
+			else
 			{
-				Shoot();
-				fireCountdown = 1f / fireRate;
+				if (fireCountdown <= 0f)
+				{
+					Shoot();
+					fireCountdown = 1f / fireRate;
+				}
+
+				fireCountdown -= Time.deltaTime;
+			}
+		}
+        else
+        {
+			if (target == null)
+			{
+				if (useLaser)
+				{
+					if (lineRenderer.enabled)
+					{
+						lineRenderer.enabled = false;
+						impactEffect.Stop();
+						impactLight.enabled = false;
+					}
+				}
+
+				return;
 			}
 
-			fireCountdown -= Time.deltaTime;
+			LockOnTarget();
+
+			if (useLaser)
+			{
+				Laser();
+			}
+			else
+			{
+				if (fireCountdown <= 0f)
+				{
+					Shoot();
+					fireCountdown = 1f / fireRate;
+				}
+
+				fireCountdown -= Time.deltaTime;
+			}
 		}
 
 	}

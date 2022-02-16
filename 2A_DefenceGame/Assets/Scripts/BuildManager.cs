@@ -18,6 +18,8 @@ public class BuildManager : MonoBehaviour {
 	public GameObject sellEffect;
 
 	private TurretBlueprint turretToBuild;
+	private TurretBlueprint[] towerToBuild;
+	//private Tower[] towerToBuild;
 	private Node selectedNode;
 
 	public NodeUI nodeUI;
@@ -55,5 +57,12 @@ public class BuildManager : MonoBehaviour {
 	{
 		return turretToBuild;
 	}
+
+	//랜덤 타워 생성 -> 더 나은 방식으로 변경예정
+    public void SelectTowerToBuild(TurretBlueprint[] turret, int cnt)
+    {
+		turretToBuild = turret[cnt];
+        DeselectNode();
+    }
 
 }

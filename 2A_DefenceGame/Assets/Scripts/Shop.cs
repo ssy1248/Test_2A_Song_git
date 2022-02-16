@@ -6,14 +6,18 @@ public class Shop : MonoBehaviour {
 	public TurretBlueprint missileLauncher;
 	public TurretBlueprint laserBeamer;
 
+	public TurretBlueprint[] turret;
+
 	BuildManager buildManager;
+
+	private Tower[] availableTowerArray;
 
 	void Start ()
 	{
 		buildManager = BuildManager.instance;
 	}
 
-	public void SelectStandardTurret ()
+    public void SelectStandardTurret ()
 	{
 		Debug.Log("Standard Turret Selected");
 		buildManager.SelectTurretToBuild(standardTurret);
@@ -30,5 +34,12 @@ public class Shop : MonoBehaviour {
 		Debug.Log("Laser Beamer Selected");
 		buildManager.SelectTurretToBuild(laserBeamer);
 	}
+
+	public void SelectRandomTurret()
+    {
+		Debug.Log("Random Tower Selected");
+		int rand = Random.Range(0, turret.Length);
+		buildManager.SelectTowerToBuild(turret, rand);
+    }
 
 }
