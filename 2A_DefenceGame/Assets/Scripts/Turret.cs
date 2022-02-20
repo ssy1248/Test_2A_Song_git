@@ -68,7 +68,8 @@ public class Turret : MonoBehaviour {
 		{
 			if(IsAnimation)
             {
-				anim.SetBool("IsAttack", false);
+				//anim.SetBool("IsAttack", false);
+				anim.Play("Idle");
 			}
 
 			target = null;
@@ -76,79 +77,44 @@ public class Turret : MonoBehaviour {
 
 	}
 
-	// Update is called once per frame
 	void Update () 
 	{
-		if(IsAnimation)
-        {
-			if (target == null)
-			{
-				if (useLaser)
-				{
-					if (lineRenderer.enabled)
-					{
-						lineRenderer.enabled = false;
-						impactEffect.Stop();
-						impactLight.enabled = false;
-					}
-				}
-
-				return;
-			}
-
-			LockOnTarget();
-			anim.SetBool("IsAttack" ,true);
-
+		if (target == null)
+		{
 			if (useLaser)
 			{
-				Laser();
-			}
-			else
-			{
-				if (fireCountdown <= 0f)
+				if (lineRenderer.enabled)
 				{
-					Shoot();
-					fireCountdown = 1f / fireRate;
+					lineRenderer.enabled = false;
+					impactEffect.Stop();
+					impactLight.enabled = false;
 				}
-
-				fireCountdown -= Time.deltaTime;
-			}
-		}
-        else
-        {
-			if (target == null)
-			{
-				if (useLaser)
-				{
-					if (lineRenderer.enabled)
-					{
-						lineRenderer.enabled = false;
-						impactEffect.Stop();
-						impactLight.enabled = false;
-					}
-				}
-
-				return;
 			}
 
-			LockOnTarget();
-
-			if (useLaser)
-			{
-				Laser();
-			}
-			else
-			{
-				if (fireCountdown <= 0f)
-				{
-					Shoot();
-					fireCountdown = 1f / fireRate;
-				}
-
-				fireCountdown -= Time.deltaTime;
-			}
+			return;
 		}
 
+		LockOnTarget();
+
+		if (IsAnimation)
+		{
+			anim.Play("Attack");
+		}
+
+		if (useLaser)
+		{
+			Laser();
+		}
+		else
+		{
+			if (fireCountdown <= 0f)
+			{
+				Shoot();
+				fireCountdown = 1f / fireRate;
+			}
+
+			fireCountdown -= Time.deltaTime;
+		}
 	}
 
 	void LockOnTarget ()
@@ -188,6 +154,7 @@ public class Turret : MonoBehaviour {
 
 		if (bullet != null)
 			bullet.Seek(target);
+		
 	}
 
 	void OnDrawGizmosSelected ()

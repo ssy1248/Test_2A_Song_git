@@ -2,11 +2,7 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour {
 
-	public TurretBlueprint standardTurret;
-	public TurretBlueprint missileLauncher;
-	public TurretBlueprint laserBeamer;
-
-	public TurretBlueprint[] turret;
+	public TurretBlueprint[] turret; //랜덤 타워가 들어갈 배열
 
 	BuildManager buildManager;
 
@@ -15,24 +11,6 @@ public class Shop : MonoBehaviour {
 	void Start ()
 	{
 		buildManager = BuildManager.instance;
-	}
-
-    public void SelectStandardTurret ()
-	{
-		Debug.Log("Standard Turret Selected");
-		buildManager.SelectTurretToBuild(standardTurret);
-	}
-
-	public void SelectMissileLauncher()
-	{
-		Debug.Log("Missile Launcher Selected");
-		buildManager.SelectTurretToBuild(missileLauncher);
-	}
-
-	public void SelectLaserBeamer()
-	{
-		Debug.Log("Laser Beamer Selected");
-		buildManager.SelectTurretToBuild(laserBeamer);
 	}
 
 	public void SelectRandomTurret()

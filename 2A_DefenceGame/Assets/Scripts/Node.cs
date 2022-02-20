@@ -34,9 +34,11 @@ public class Node : MonoBehaviour {
 
 	void OnMouseDown ()
 	{
+		//노드를 클릭하지 않았을 시 다른 곳을 클릭해도 이곳으로 넘어오지 않는다
 		if (EventSystem.current.IsPointerOverGameObject())
 			return;
 
+		//터렛이 안지어져 있다면 건설 가능한 노드로 판단
 		if (turret != null)
 		{
 			buildManager.SelectNode(this);

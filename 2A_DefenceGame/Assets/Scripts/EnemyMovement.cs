@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+public enum Direction { UP, DOWN, RIGHT, LEFT};
+//down => -180, up => 0, right => 90, left => -90
+
 [RequireComponent(typeof(Enemy))]
 public class EnemyMovement : MonoBehaviour {
 

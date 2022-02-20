@@ -9,23 +9,43 @@ public class WaveSpawner : MonoBehaviour {
 	public Wave[] waves;
 
 	public Transform spawnPoint;
+	//public GameObject navigator;
 
-	public float timeBetweenWaves = 5f;
-	private float countdown = 2f;
+	public float timeBetweenWaves = 10f;
+	private float countdown = 5f;
 
 	public Text waveCountdownText;
+	public Text waveText;
 
 	public GameManager gameManager;
 
+	//NavigatorMovement navi;
+
 	private int waveIndex = 0;
 
-	void Update ()
+	void Start()
+    {
+		//navi = NavigatorMovement.instance;
+		//Instantiate(navigator, spawnPoint.position, spawnPoint.rotation);
+	}
+
+    void Update ()
 	{
+		//if (!navi.IsEnd) //빌드매니저 참고
+		//{
+		//	return;
+		//}
+
 		if (EnemiesAlive > 0)
 		{
 			return;
 		}
 
+		MoveMent();
+	}
+
+	void MoveMent()
+    {
 		if (waveIndex == waves.Length)
 		{
 			gameManager.WinLevel();
@@ -44,6 +64,7 @@ public class WaveSpawner : MonoBehaviour {
 		countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
 
 		waveCountdownText.text = string.Format("{0:00.00}", countdown);
+		waveText.text = waveIndex + 1 + " Waves";
 	}
 
 	IEnumerator SpawnWave ()
@@ -68,4 +89,8 @@ public class WaveSpawner : MonoBehaviour {
 		Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
 	}
 
+	public void SpawnMissionEnemy(GameObject enemy)
+    {
+		Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+    }
 }

@@ -7,13 +7,19 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject gameOverUI;
 	public GameObject completeLevelUI;
+	public GameObject[] bonusPanels;
 
 	void Start ()
 	{
 		GameIsOver = false;
+
+		//모든 UI패널을 다 숨긴다
+		foreach (GameObject go in bonusPanels)
+		{
+			go.SetActive(false);
+		}
 	}
 
-	// Update is called once per frame
 	void Update () {
 		if (GameIsOver)
 			return;
